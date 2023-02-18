@@ -19,11 +19,4 @@ For LRU2 replacement policy
 ```
 buffer -p LRU2
 ```
-
-For CLOCK replacement policy
-
-```
-buffer -p CLOCK
-```
-
 Constants are all defined in const.h
