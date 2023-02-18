@@ -25,7 +25,8 @@ vector<string> split(const string& str, const string& delim) {
 		res.push_back(s);
 		p = strtok(NULL, d);
 	}
-	delete strs, d;
+	delete[] strs;
+	delete[] d;
 	return res;
 }
 

@@ -61,6 +61,7 @@ int Bgr::fixPage(int page_id) {
 
 void Bgr::removeBCB(BCB* ptr) {
     int frame_id = ptr->frame_id; 
+    assert(frame_id < BUFFERSIZE);
     int page_id = ptr->page_id;
     ptof.erase(page_id);
     ftop.erase(frame_id);
@@ -73,6 +74,7 @@ void Bgr::removeBCB(BCB* ptr) {
 }
 
 BCB* Bgr::addBCB(int page_id, int frame_id) {
+    assert(frame_id < BUFFERSIZE);
     BCB* bcb = new BCB();
     bcb->page_id = page_id;
     bcb->frame_id = frame_id;

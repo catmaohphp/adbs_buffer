@@ -6,6 +6,7 @@
 #include <list>
 #include <unordered_map>
 #include <stack>
+#include <assert.h>
 
 #include "const.h"
 
@@ -224,17 +225,19 @@ class LRU2Bgr: public Bgr {
 class CLOCKBgr: public Bgr {
     public:
         virtual void updateHitted(BCB* bcb) {
-            ;
+            bcb->referenced = true;
+    	    assert(bcb->frame_id < BUFFERSIZE);
         }
 
         virtual void updateUnhitted(BCB* bcb) {
-            bcb_list.push_back(bcb);
+            bcb_list.insert(current, bcb);
+    	    assert(bcb->frame_id < BUFFERSIZE);
             // Update current
             if (numFreeFrames() > 0) {
-                current = --bcb_list.end();
+                current =bcb_list.begin();
             } else {
                 // replaced
-                current ++;
+	    	current = bcb_list.erase(current);
                 if (current == bcb_list.end()) {
                     current = bcb_list.begin();
                 }
@@ -243,12 +246,14 @@ class CLOCKBgr: public Bgr {
 
         virtual int selectVictim() {
             BCB* bcb = *current;
+    	    assert(bcb->frame_id < BUFFERSIZE);
             while (bcb->referenced) {
                 bcb->referenced = false;
                 current ++;
                 if (current == bcb_list.end()) {
                     current = bcb_list.begin();
                 }
+		bcb = *current;
             }
             return bcb->frame_id;
         }
@@ -262,9 +267,10 @@ class CLOCKBgr: public Bgr {
 
     private:
 
+        list<BCB*> bcb_list;
+
         list<BCB*>::iterator current;
 
-        list<BCB*> bcb_list;
 
 }; 
 
